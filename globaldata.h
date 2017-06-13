@@ -22,13 +22,15 @@ typedef struct
 {
 	enum
 	{
-		INFAREDLOW=0,
+		NOFAULT=0,
+		INFAREDLOW,
 		VOLOW,
 		VOHIGH,
 		VILOW,
 		VIHIGH,
 		IOHIGH,
-		VTHIGH
+		VTHIGH,
+		FORCEMODE,
 	}Fault;
 	IOTypedef	IO0,IO1,IO2;
 	uint16_t Voltage[4];
@@ -36,7 +38,7 @@ typedef struct
 } DeviceTypedef;	
 
 extern DeviceTypedef ChargingStatus;
-extern code char FaultMessage[7][32];
+extern code char FaultMessage[9][32];
 
 
 void Charge_Monitor();

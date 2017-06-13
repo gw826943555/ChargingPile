@@ -61,19 +61,19 @@ void Show_Status()
 		case 0:
 		{
 			++step;
-			printf("OutputVoltage:%dmV\r\n",ChargingStatus.Voltage[0]*117);
+			printf("Info:OutputVoltage %dmV\r\n",ChargingStatus.Voltage[0]*117);
 			break;
 		}
 		case 1:
 		{
 			++step;
-			printf("InputVoltage:%dmV\r\n",0);
+			printf("Info:InputVoltage %dmV\r\n",ChargingStatus.Voltage[1]);
 			break;
 		}
 		case 2:
 		{
 			++step;
-			printf("InputVoltage:%dmV\r\n",0);
+			printf("Info:InputVoltage %dmV\r\n",0);
 			break;
 		}
 		default:

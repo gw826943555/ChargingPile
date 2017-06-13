@@ -1,22 +1,24 @@
 #include "globaldata.h"
 #include "ADC.h"
 
-code char FaultMessage[7][32]=
+code char FaultMessage[9][32]=
 {
-	"Infared is high\r\n",
-	"OutputVoltage is low\r\n",
-	"OutputVoltage is high\r\n",
-	"InputVoltage is low\r\n",
-	"InputVoltage is high\r\n",
-	"OutputCurrent too high\r\n",
-	"Temperature too high\r\n"
+	"Info:Charging\r\n",
+	"Warning:Infared not triggerd\r\n",
+	"Warning:Low OutputVoltage\r\n",
+	"Warning:High OutputVoltage\r\n",
+	"Warning:Low InputVoltage\r\n",
+	"Warning:High InputVoltage\r\n",
+	"Warning:High OutputCurrent\r\n",
+	"Warning:High Temperature\r\n",
+	"Warning:Forced Charging Mode\r\n"
 };
 
 DeviceTypedef ChargingStatus;
 
 void Charge_Monitor()
 {
-	if((ChargingStatus.IO1==LOW)&(ChargingStatus.Voltage[0]>VOMIN))				//满足条件，充电
+	if((ChargingStatus.IO1==LOW)&&(ChargingStatus.Voltage[0]>VOMIN))				//满足条件，充电
 	{
 		ChargingStatus.isCharging = Charging;
 	}
@@ -27,7 +29,7 @@ void Charge_Monitor()
 		ChargingStatus.Fault = INFAREDLOW;
 	}
 	
-	if(ChargingStatus.Voltage[0]>VOMIN)																		//充电口电压过低
+	if(ChargingStatus.Voltage[0]<VOMIN)																		//充电口电压过低
 	{
 		ChargingStatus.isCharging = Discharge;
 		ChargingStatus.Fault = VOLOW;
@@ -62,6 +64,12 @@ void Charge_Monitor()
 		ChargingStatus.isCharging = Discharge;
 		ChargingStatus.Fault = VTHIGH;
 	}
+	
+//	if(ChargingStatus.IO3 == HIGH)																					//强制开关，最高优先级
+//	{
+//		ChargingStatus.isCharging = Charging;
+//		ChargingStatus.Fault = FORCEMODE;
+//	}
 	
 	if(ChargingStatus.isCharging==Discharge)
 	{
