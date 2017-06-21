@@ -1,10 +1,17 @@
 #include "reg51.h"
 #include "stdint.h"
 
+typedef enum
+{
+	false = 0,
+	true,
+}bool;
+
 typedef struct
 {
 	int16_t period_;
 	int16_t reset_time_;
+	bool is_reset;
 }TimerTypedef;
 
 void Timer_Init();

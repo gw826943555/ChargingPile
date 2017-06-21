@@ -31,7 +31,14 @@ void tm0_isr() interrupt 1 using 1
   */
 uint8_t timer_is_timeup(TimerTypedef* this)
 {
-	return(base_time_ - this->reset_time_ > this->period_);
+	if(base_time_ - this->reset_time_ > this->period_)
+	{
+		this -> is_reset = false;
+		return 1;
+	}else
+	{
+		return 0;
+	}
 }
 
 /**
@@ -41,6 +48,7 @@ uint8_t timer_is_timeup(TimerTypedef* this)
   */
 void timer_reset(TimerTypedef* this)
 {
+	this -> is_reset = true;
 	this->reset_time_ = base_time_;
 }
 

@@ -1,4 +1,6 @@
 #include "uart.h"
+#include "stdarg.h"
+#include "stdio.h"
 
 sfr T2H				=				0xd6;
 sfr T2L				=				0xd7;

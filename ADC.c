@@ -23,11 +23,11 @@ void InitADC()
 	//Delay(2);
 }
 
-void StartADC()
-{
-	ADC_CONTR =ADC_POWER|ADC_SPEEDLL|ADC_START;
-	IE |= ADCITEN;												//开启ADC转换中断
-}
+//void StartADC()
+//{
+//	ADC_CONTR =ADC_POWER|ADC_SPEEDLL|ADC_START;
+//	IE |= ADCITEN;												//开启ADC转换中断
+//}
 
 uint16_t GetADCResult(unsigned char ch)
 {
@@ -51,7 +51,7 @@ void ADC_Monitor()
 	static uint16_t ch=0;
 	uint16_t Buf;
 	Buf = GetADCResult(ch);
-	ChargingStatus.Voltage[ch] = Buf;
+	ChargingStatus.Voltage[ch] = (Buf << 2) + (ADC_LOW2 & 0x03);
 //	printf("ADCch%d:%d\r\n",ch,Buf);
 	if(++ch>3) ch=0;
 }

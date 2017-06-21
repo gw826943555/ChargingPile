@@ -33,7 +33,7 @@ typedef struct
 		FORCEMODE,
 	}Fault;
 	IOTypedef	IO0,IO1,IO2;
-	uint16_t Voltage[4];
+	int16_t Voltage[4];
 	ChargingStatusTypedef isCharging;
 } DeviceTypedef;	
 

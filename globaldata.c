@@ -1,5 +1,6 @@
 #include "globaldata.h"
 #include "ADC.h"
+#include "timer.h"
 
 code char FaultMessage[9][32]=
 {
@@ -18,12 +19,15 @@ DeviceTypedef ChargingStatus;
 
 void Charge_Monitor()
 {
-	if((ChargingStatus.IO1==LOW)&&(ChargingStatus.Voltage[0]>VOMIN))				//满足条件，充电
+//	static TimerTypedef HysteresisTimer;
+//	static ChargingStatusTypedef st = Discharge;
+	ChargingStatus.Fault = NOFAULT;
+	if((ChargingStatus.IO1 == LOW)&&(ChargingStatus.Voltage[0]>VOMIN))				//满足条件，充电
 	{
 		ChargingStatus.isCharging = Charging;
 	}
 	
-	if(ChargingStatus.IO1==HIGH)																					//红外未被触发
+	if(ChargingStatus.IO1 == HIGH)																					//红外未被触发
 	{
 		ChargingStatus.isCharging = Discharge;
 		ChargingStatus.Fault = INFAREDLOW;
@@ -65,10 +69,27 @@ void Charge_Monitor()
 		ChargingStatus.Fault = VTHIGH;
 	}
 	
-//	if(ChargingStatus.IO3 == HIGH)																					//强制开关，最高优先级
-//	{
+	if(ChargingStatus.IO0 == HIGH)																					//强制开关，最高优先级
+	{
+//		ChargingStatus.isCharging = Charging;
+//		st = Charging;
 //		ChargingStatus.isCharging = Charging;
 //		ChargingStatus.Fault = FORCEMODE;
+	}
+	
+//	if((st == Charging)&(ChargingStatus.IO0 == LOW))											//强制开关断开
+//	{
+//		st = Discharge;
+//		timer_set_period(&HysteresisTimer,1000);
+//		timer_reset(&HysteresisTimer);
+//	}
+//	
+//	if(HysteresisTimer.is_reset == true)
+//	{
+//		if( timer_is_timeup(&HysteresisTimer) == 0)													//迟滞定时未到
+//		{
+//			ChargingStatus.isCharging = Discharge;
+//		}
 //	}
 	
 	if(ChargingStatus.isCharging==Discharge)

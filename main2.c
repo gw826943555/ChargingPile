@@ -25,8 +25,6 @@ sfr P3M0 			= 			0xb2;
 sbit ChargeCtrl = 	P1^4;
 sbit P15				=		P1^5;
 
-char buf[]="System Running...\r\n";
-
 void Show_Status();
 
 void main()
@@ -56,30 +54,40 @@ void main()
 void Show_Status()
 {
 	static uint16_t step;
+	int16_t temp=0;
 	switch(step)
 	{
 		case 0:
 		{
 			++step;
-			printf("Info:OutputVoltage %dmV\r\n",ChargingStatus.Voltage[0]*117);
+			temp = (int32_t)ChargingStatus.Voltage[0] * 5000 * 11 / 1024;
+			printf("Info:OutputVoltage %dmV\r\n",temp);
 			break;
 		}
 		case 1:
 		{
 			++step;
-			printf("Info:InputVoltage %dmV\r\n",ChargingStatus.Voltage[1]);
+			temp = (int32_t)ChargingStatus.Voltage[1] * 5000 * 11 / 1024;
+			printf("Info:InputVoltage %dmV\r\n",temp);
 			break;
 		}
 		case 2:
 		{
 			++step;
-			printf("Info:InputVoltage %dmV\r\n",0);
+			temp = ((int32_t)ChargingStatus.Voltage[2] * 5000 / 1024 -2575)* 3 / 4 / 66;			//66mV/A 0.75倍衰减
+			printf("Info:OutputCurrent %dA\r\n",temp);
+			break;
+		}
+		case 3:
+		{
+			++step;
+			temp = ((int32_t)ChargingStatus.Voltage[3] * 5000 / 1024)/10-2;										//10mV/A 2~150
+			printf("Info:Temperature %d\r\n",temp);
 			break;
 		}
 		default:
 		{
 			printf(FaultMessage[ChargingStatus.Fault]);
-			printf(buf);
 			step =0;
 			break;
 		}
